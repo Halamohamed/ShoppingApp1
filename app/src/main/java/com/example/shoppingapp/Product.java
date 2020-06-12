@@ -6,9 +6,9 @@ public class Product {
     private String productName;
     private Category category;
     private int amount;
-    private double productPrice;
+    private Double productPrice;
 
-    public Product(int id, String productName, Category category, int amount, double productPrice) {
+    public Product(int id, String productName, Category category, int amount, Double productPrice) {
         this.id = id;
         this.productName = productName;
         this.category = category;
