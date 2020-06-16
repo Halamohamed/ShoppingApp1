@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/image_appShopping"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -9,36 +10,62 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="#CEBAF1"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="41dp"
-            android:text="All Shopping product" />
+            android:text="@string/app_title"
+            android:textColor="#9217A6"
+            android:textIsSelectable="true"
+            android:textSize="30sp"
+            app:fontFamily="sans-serif" />
 
-        <CheckBox
-            android:id="@+id/box1"
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="142dp"
+            android:contentDescription="@string/app_image"
+            app:srcCompat="@drawable/ic_launcher_foreground" />
+
+        <Button
+            android:id="@+id/accessories_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Healthy product" />
+            android:background="#9C27B0"
+            android:text="@string/accessories_btn"
+            android:textColor="#FFFFFF" />
 
-        <CheckBox
-            android:id="@+id/box2"
+        <Button
+            android:id="@+id/clothes_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Clothes" />
+            android:background="#9C27B0"
+            android:text="@string/clothes_btn"
+            android:textColor="#FFFFFF" />
 
-        <CheckBox
-            android:id="@+id/box3"
+        <Button
+            android:id="@+id/shoes_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="foods" />
+            android:background="#9C27B0"
+            android:text="@string/shoes_btn"
+            android:textColor="#FFFFFF" />
 
-        <ListView
-            android:id="@+id/list_myList"
+        <Button
+            android:id="@+id/electronic_btn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:background="#9C27B0"
+            android:text="@string/electronic_btn"
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 

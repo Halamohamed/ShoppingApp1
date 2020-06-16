@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ShoppingApp</string>
+    <string name="app_title">HALAS/SHOPPING</string>
+    <string name="app_image">appImage</string>
+    <string name="accessories_btn">ACCESSORIES</string>
+    <string name="clothes_btn">CLOTHES</string>
+    <string name="shoes_btn">SHOES</string>
+    <string name="electronic_btn">ELECTRONIC</string>
 </resources>

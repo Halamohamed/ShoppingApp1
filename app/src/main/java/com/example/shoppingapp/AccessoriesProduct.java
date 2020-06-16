@@ -4,11 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class HealthyProduct extends AppCompatActivity {
+public class AccessoriesProduct extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_healthy_product);
+        setContentView(R.layout.activity_accessories_product);
     }
 }
