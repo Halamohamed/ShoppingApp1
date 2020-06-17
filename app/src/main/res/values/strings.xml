@@ -6,4 +6,8 @@
     <string name="clothes_btn">CLOTHES</string>
     <string name="shoes_btn">SHOES</string>
     <string name="electronic_btn">ELECTRONIC</string>
+
+    <string name="tunic_title">TUNIC</string>
+    <string name="tunic_img">TUNIC-IMAGE</string>
+    <string name="tunic_price">300KR</string>
 </resources>

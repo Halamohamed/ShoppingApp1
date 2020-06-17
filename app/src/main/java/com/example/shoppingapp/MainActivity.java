@@ -10,7 +10,7 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView title;
     private Button accessoriesBox;
@@ -62,6 +62,13 @@ public class MainActivity extends AppCompatActivity {
           }
       });
     }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    //VolleyNetwork.getInstance()
 
 
 
