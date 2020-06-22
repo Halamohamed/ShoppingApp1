@@ -5,10 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 
+import java.io.ByteArrayOutputStream;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +49,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
 
-        contentValues.put(IMAGES, product.getProductImage());
+        ByteArrayOutputStream outputImage = new ByteArrayOutputStream();
+        product.getProductImage().compress(Bitmap.CompressFormat.PNG,0,outputImage);
+
+        byte[] imgByteData = outputImage.toByteArray();
+
+        contentValues.put(IMAGES, imgByteData);
         contentValues.put(COLUMN_PRODUCT_NAME, product.getProductName());
         contentValues.put(COLUMN_CATEGORY, String.valueOf(product.getCategory()));
-        contentValues.put(COLUMN_AMOUNT, String.valueOf(product.getAmount()));
         contentValues.put(COLUMN_PRICE, String.valueOf(product.getProductPrice()));
 
         //insert data to the product table
@@ -72,13 +79,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             do {
                 int productId = cursor.getInt(0);
-                String imageId = cursor.getString(1);
+                byte[] imageId = cursor.getBlob(1);
                 String productName = cursor.getString(2);
                 String category = cursor.getString(3);
-                int amount = cursor.getInt(4);
-                double price = cursor.getDouble(5);
+                Double price = cursor.getDouble(4);
 
-                Product product = new Product(productId,productName, imageId,amount,price);
+                Product product = new Product(productId, BitmapFactory.decodeByteArray(imageId,0,imageId.length),productName,category, price);
 
                 products.add(product);
 
@@ -102,6 +108,78 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }else {
             return false;
         }
+    }
+    public ArrayList<String> getAccessoriesTitle(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ArrayList<String> products = new ArrayList<>();
+
+        String getProduct = "SELECT " + COLUMN_PRODUCT_NAME + " FROM " + PRODUCT_TABLE ;
+        Cursor cursor = db.rawQuery(getProduct,null);
+
+        if(cursor.moveToFirst()){
+            do {
+
+                String productName = cursor.getString(2);
+
+
+               // Product product = new Product(productId, BitmapFactory.decodeByteArray(imageId,0,imageId.length),productName,category, price);
+
+                products.add(productName);
+
+            }while (cursor.moveToNext());
+
+
+        }
+        cursor.close();
+        db.close();
+        return products;
+    }
+    public ArrayList<String> getAccessoriesPrice(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ArrayList<String> products = new ArrayList<>();
+
+        String getProduct = "SELECT " + COLUMN_PRICE + " FROM " + PRODUCT_TABLE ;
+        Cursor cursor = db.rawQuery(getProduct,null);
+
+        if(cursor.moveToFirst()){
+            do {
+
+                String productPrice = cursor.getString(1);
+
+                products.add(productPrice);
+
+            }while (cursor.moveToNext());
+
+
+        }
+        cursor.close();
+        db.close();
+        return products;
+    }
+    public ArrayList<Bitmap> getAccessoriesImages(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ArrayList<Bitmap> products = new ArrayList<>();
+
+        String getProduct = "SELECT " + IMAGES + " FROM " + PRODUCT_TABLE ;
+        Cursor cursor = db.rawQuery(getProduct,null);
+
+        if(cursor.moveToFirst()){
+            do {
+
+                byte[] imageByteData = cursor.getBlob(1);
+
+                products.add(BitmapFactory.decodeByteArray(imageByteData,0,imageByteData.length));
+
+            }while (cursor.moveToNext());
+
+
+        }
+        cursor.close();
+        db.close();
+        return products;
     }
 
 }

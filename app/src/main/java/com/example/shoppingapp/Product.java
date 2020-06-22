@@ -1,17 +1,17 @@
 package com.example.shoppingapp;
 
-import java.sql.Blob;
+import android.graphics.Bitmap;
 
 public class Product {
 
     private int id;
-    private String productImage;
+    private Bitmap productImage;
     private String productName;
     private String category;
     private int amount;
     private Double productPrice;
 
-    public Product(int id,String productImage, String productName, String category, int amount, Double productPrice) {
+    public Product(int id,Bitmap productImage, String productName, String category, Double productPrice) {
         this.id = id;
         this.productImage = productImage;
         this.productName = productName;
@@ -20,13 +20,7 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public Product(int id,String productName,String productImage, int amount,double price) {
-        this.id = id;
-        this.productName = productName;
-        this.productImage = productImage;
-        this.amount = amount;
-        this.productPrice = price;
-    }
+
 
     public int getId() {
         return id;
@@ -64,7 +58,7 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public String getProductImage() {
+    public Bitmap getProductImage() {
         return productImage;
     }
 

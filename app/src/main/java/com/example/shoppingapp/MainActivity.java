@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  String accessoryImage = "https://imgur.com/zYY9thC";
 
     private  String dressImage = "https://imgur.com/CDOshUv";
-    private  String jeansImage = "https://imgur.com/I6SbsYs";
+    private String jeansImage =  "https://imgur.com/I6SbsYs";
     private String jumpsuitImage = "https://imgur.com/qIAHOi8";
     private String kidsDressImage = "https://imgur.com/Cxz5XeE";
 
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //registerForContextMenu(product_listView);
 
 
+
     }
 
     @Override
@@ -78,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()){
             case R.id.clothes_btn:
-                addProduct();
+
                  intent = new Intent(MainActivity.this, ClothesProduct.class);
                  Toast.makeText(MainActivity.this, "Clothes product", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
@@ -116,17 +119,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return super.onContextItemSelected(item);
     }
 
-    public void addProduct(){
-        DataBaseHelper db = new DataBaseHelper(MainActivity.this);
-        Product clothProduct1 = new Product(-1, dressImage, "dress","clothes", 1, 300.90);
-        Product clothProduct2 = new Product(-1, dressImage, "dress","clothes", 1, 300.90);
 
-        Product accessoryProduct = new Product(1, accessoryImage, "accessories","Accessories",1, 250.0);
-
-         boolean added = db.addProduct(clothProduct1);
-         db.addProduct(clothProduct2);
-         db.addProduct(accessoryProduct);
-        Toast.makeText(MainActivity.this, "Added: " + added, Toast.LENGTH_SHORT).show();
-
-    }
 }
