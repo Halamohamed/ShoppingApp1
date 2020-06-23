@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent;
 
-        addProduct();
+       // addProduct();
         switch (v.getId()){
             case R.id.clothes_btn:
 

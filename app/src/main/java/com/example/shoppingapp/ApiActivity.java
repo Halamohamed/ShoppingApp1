@@ -1,8 +1,11 @@
 package com.example.shoppingapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,15 +16,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ApiActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -31,7 +38,10 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
     private ArrayAdapter arrayAdapter;
     private Button get_btn, post_btn, put_btn, delete_btn;
 
+    private RequestQueue requestQueue;
+
     private ArrayList<UserModal> userModals;
+    private ArrayList<String> fullNameList;
 
     private final static String SERVER_URL = "https://reqres.in/api/";
     @Override
@@ -48,6 +58,11 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
         delete_btn = findViewById(R.id.delete_btn);
 
         userModals = new ArrayList<>();
+        fullNameList = new ArrayList<>();
+
+        requestQueue = Volley.newRequestQueue(this);
+
+        updateViews();
 
         get_btn.setOnClickListener(this);
         post_btn.setOnClickListener(this);
@@ -62,8 +77,20 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
 
             }
         });
+        //add registerForContextMenu(ListView); on onCreate Method
 
         //AdapterView.AdapterContextMenuInfo info = item.getMenuInfo();
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        return super.onContextItemSelected(item);
+        //Switch here
+        //code..
     }
 
     @Override
@@ -73,21 +100,25 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                 JsonObjectRequest myGetRequest = new JsonObjectRequest(Request.Method.GET, SERVER_URL + "users?page=2", null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        //text_result.setText(response.toString());
+                        text_result.setText(response.toString());
                         try {
-                            JSONObject dataObject = response.getJSONObject("data");
-                            for(int i =0; i < dataObject.length(); i++) {
-                                JSONObject userObject = dataObject.getJSONObject(String.valueOf(i));
+                            JSONArray dataObject = response.getJSONArray("data");
+                            for(int i=0; i < dataObject.length(); i++) {
+                                JSONObject userObject = dataObject.getJSONObject(i);
                                 UserModal user = new UserModal(userObject.getInt("id"),
                                         userObject.getString("email"),
                                         userObject.getString("first_name"),
                                         userObject.getString("last_name"),
                                         userObject.getString("avatar"));
                                 userModals.add(user);
-
-                                Picasso.get().load(userObject.getString("avatar")).into(image_avatar);
+                                String fullName = user.getFirstName()+ " " + user.getLastName()+ " | ";
+                                fullNameList.add(fullName);
+                                //Picasso.get().load(userObject.getString("avatar")).into(image_avatar);
                                 updateViews();
                             }
+
+
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -99,8 +130,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                         error.printStackTrace();
                     }
                 });
-
-                VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myGetRequest);
+                requestQueue.add(myGetRequest);
+                //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myGetRequest);
                 break;
             case R.id.post_btn:
                 Toast.makeText(this,"POST" , Toast.LENGTH_SHORT).show();
@@ -123,7 +154,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                             error.printStackTrace();
                         }
                     });
-                    VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPostRequest);
+                    requestQueue.add(myPostRequest);
+                    //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPostRequest);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -147,7 +179,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                             error.printStackTrace();
                         }
                     });
-                    VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPutRequest);
+                    requestQueue.add(myPutRequest);
+                    //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPutRequest);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -166,7 +199,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                         error.printStackTrace();
                     }
                 });
-                VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myDeleteRequest);
+                requestQueue.add(myDeleteRequest);
+               // VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myDeleteRequest);
                 break;
 
         }
@@ -174,7 +208,7 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
     }
 
     private void updateViews(){
-        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,userModals);
+        arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1,fullNameList);
         list_users.setAdapter(arrayAdapter);
     }
 }
