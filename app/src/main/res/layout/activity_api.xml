@@ -75,7 +75,7 @@
         app:layout_constraintVertical_bias="0.377" />
 
     <ListView
-        android:id="@+id/myListView"
+        android:id="@+id/myListUsers"
         android:layout_width="409dp"
         android:layout_height="381dp"
         android:layout_marginStart="1dp"
@@ -90,7 +90,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/myTextView"
+        android:id="@+id/myTextResult"
         android:layout_width="408dp"
         android:layout_height="48dp"
         android:hint="Result"

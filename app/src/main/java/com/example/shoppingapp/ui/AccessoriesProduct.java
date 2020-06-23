@@ -1,11 +1,13 @@
 package com.example.shoppingapp.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -24,7 +26,9 @@ import com.example.shoppingapp.MainActivity;
 import com.example.shoppingapp.MyAdapter;
 import com.example.shoppingapp.Product;
 import com.example.shoppingapp.R;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class AccessoriesProduct extends AppCompatActivity {
@@ -50,8 +54,17 @@ public class AccessoriesProduct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accessories_product);
 
-        addProduct();
         accessories_list = findViewById(R.id.accessories_list);
+
+        /*try {
+            dataBaseHelper.addImageToDB(BitmapFactory.decodeByteArray(dressImage.getBytes(),1,dressImage.length()));
+            dataBaseHelper.addImageToDB(BitmapFactory.decodeByteArray(jeansImage.getBytes(),2,dressImage.length()));
+
+            dataBaseHelper.addImageToDB(BitmapFactory.decodeByteArray(jumpsuitImage.getBytes(),3,dressImage.length()));
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
 
         ArrayList<String> titles = new ArrayList<>();
         titles = dataBaseHelper.getAccessoriesTitle();
@@ -62,7 +75,7 @@ public class AccessoriesProduct extends AppCompatActivity {
 
 
         ArrayList<Bitmap> images = new ArrayList<>() ;
-                images = dataBaseHelper.getAccessoriesImages();
+                images = dataBaseHelper.getAllImages();
 
         adp = new MyAdapter(this,titles,prices,images);
 
@@ -82,21 +95,32 @@ public class AccessoriesProduct extends AppCompatActivity {
 
 
     }
-    public void addProduct(){
-        DataBaseHelper db = new DataBaseHelper(AccessoriesProduct.this);
-        Product clothProduct1 = new Product(0, BitmapFactory.decodeByteArray(jeansImage.getBytes(),0,jeansImage.length()), "dress","clothes", 300.90);
-        Product clothProduct2 = new Product(1, BitmapFactory.decodeByteArray(dressImage.getBytes(),0,dressImage.length()), "dress","clothes", 300.90);
 
-        Product accessoryProduct = new Product(2, BitmapFactory.decodeByteArray(accessoryImage.getBytes(),0,accessoryImage.length()), "accessories","Accessories", 250.0);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        boolean added = db.addProduct(clothProduct1);
-        db.addProduct(clothProduct2);
-        db.addProduct(accessoryProduct);
-        Toast.makeText(AccessoriesProduct.this, "Added: " + added, Toast.LENGTH_SHORT).show();
+        if(requestCode == 50) {
+            if (resultCode == RESULT_OK) {
+                Bitmap bitmapImage = (Bitmap) data.getExtras().get("data");
+                myImage.setImageBitmap(bitmapImage);
+                try {
+                    boolean status = dataBaseHelper.addImageToDB(bitmapImage);
+                    Snackbar ss = Snackbar.make(myListView, "Added image to db" + status, Snackbar.LENGTH_SHORT).setAction("Remove", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Toast.makeText(AccessoriesProduct.this, "Action Clicked", Toast.LENGTH_SHORT).show();
+                            //code
+                        }
+                    });
+                    ss.show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
 
-    }
-
-   /* @Override
+    /* @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
@@ -109,4 +133,5 @@ public class AccessoriesProduct extends AppCompatActivity {
 
         return super.onContextItemSelected(item);
     }*/
+    }
 }

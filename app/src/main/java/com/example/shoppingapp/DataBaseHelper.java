@@ -12,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,11 +51,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
 
         ByteArrayOutputStream outputImage = new ByteArrayOutputStream();
-        product.getProductImage().compress(Bitmap.CompressFormat.PNG,0,outputImage);
+        //product.getProductImage().compress(Bitmap.CompressFormat.PNG,0,outputImage);
+        product.getProductImage();
 
-        byte[] imgByteData = outputImage.toByteArray();
+        Bitmap imgByteData = product.getProductImage();
 
-        contentValues.put(IMAGES, imgByteData);
+        contentValues.put(IMAGES, String.valueOf(imgByteData));
         contentValues.put(COLUMN_PRODUCT_NAME, product.getProductName());
         contentValues.put(COLUMN_CATEGORY, String.valueOf(product.getCategory()));
         contentValues.put(COLUMN_PRICE, String.valueOf(product.getProductPrice()));
@@ -67,6 +69,66 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return true;
         }
     }
+
+    public boolean addImageToDB (Bitmap img) throws IOException, IOException {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        img.compress(Bitmap.CompressFormat.PNG,0,outputStream);
+        byte[] imgByteData = outputStream.toByteArray();
+
+
+        ContentValues cv = new ContentValues();
+        cv.put(IMAGES, imgByteData);
+
+        long insert = db.insert(PRODUCT_TABLE, null, cv);
+        outputStream.close();
+
+        if(insert == -1){
+            db.close();
+            return false;
+        }else{
+            db.close();
+            return true;
+        }
+    }
+    public Bitmap getImage(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String get_image_query = "SELECT * FROM " + PRODUCT_TABLE + " WHERE " + ID + " = " + id;
+
+        Cursor cursor = db.rawQuery(get_image_query,null);
+
+        if(cursor.moveToFirst()){
+            byte[] imageByteData = cursor.getBlob(1);
+            cursor.close();
+            return BitmapFactory.decodeByteArray(imageByteData,0,imageByteData.length);
+        }
+
+        return null;
+    }
+
+    public ArrayList<Bitmap> getAllImages(){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        ArrayList<Bitmap> reuslt = new ArrayList<>();
+
+        String get_image_query = "SELECT * FROM " + PRODUCT_TABLE ;
+
+        Cursor cursor = db.rawQuery(get_image_query,null);
+
+        if(cursor.moveToFirst()){
+            do{
+                byte[] imageByteData = cursor.getBlob(1);
+                reuslt.add(BitmapFactory.decodeByteArray(imageByteData,0,imageByteData.length));
+            }while (cursor.moveToNext());
+
+        }
+
+        cursor.close();
+        return reuslt;
+    }
+
 
     public List<Product> getAllProduct(){
         SQLiteDatabase db = this.getReadableDatabase();

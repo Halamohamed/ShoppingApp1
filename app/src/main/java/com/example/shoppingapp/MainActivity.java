@@ -1,6 +1,7 @@
 package com.example.shoppingapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button accessoriesBtn;
     private Button clothesBtn;
     private Button shoesBtn;
-    private Button electronicBtn;
+    private Button apiBtn;
     private ListView product_listView;
 
     private  String accessoryImage = "https://imgur.com/zYY9thC";
@@ -52,19 +53,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         accessoriesBtn = findViewById(R.id.accessories_btn);
         clothesBtn = findViewById(R.id.clothes_btn);
         shoesBtn = findViewById(R.id.shoes_btn);
-        electronicBtn = findViewById(R.id.electronic_btn);
+        apiBtn = findViewById(R.id.api_btn);
         //product_listView = findViewById(R.id.myProduct_listView);
 
-        get_btn = findViewById(R.id.get_btn);
-        post_btn = findViewById(R.id.post_btn);
-        put_btn = findViewById(R.id.put_btn);
-        delete_btn = findViewById(R.id.delete_btn);
 
         //set onClickListener for buttons
         accessoriesBtn.setOnClickListener(this);
         clothesBtn.setOnClickListener(this);
         shoesBtn.setOnClickListener(this);
-        electronicBtn.setOnClickListener(this);
+        apiBtn.setOnClickListener(this);
 
         //requestQueue = Volley.newRequestQueue(this);
 
@@ -79,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent;
 
+        addProduct();
         switch (v.getId()){
             case R.id.clothes_btn:
 
@@ -96,14 +94,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(MainActivity.this, "shoes product", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
                 break;
-            case R.id.electronic_btn:
-                Toast.makeText(MainActivity.this,"Electronic product", Toast.LENGTH_SHORT).show();
+            case R.id.api_btn:
+                Toast.makeText(MainActivity.this,"API call", Toast.LENGTH_SHORT).show();
+                Intent apiIntent = new Intent(this, ApiActivity.class);
+                startActivity(apiIntent);
                 break;
         }
     }
 
     //VolleyNetwork.getInstance()
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmapImage = (Bitmap) data.getExtras().get(dressImage);
+
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -117,6 +124,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         AdapterView.AdapterContextMenuInfo itemInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         return super.onContextItemSelected(item);
+    }
+
+    public void addProduct(){
+        DataBaseHelper db = new DataBaseHelper(MainActivity.this);
+        Product clothProduct1 = new Product(0, BitmapFactory.decodeByteArray(jeansImage.getBytes(),0,jeansImage.length()), "dress","clothes", 300.90);
+        Product clothProduct2 = new Product(1, BitmapFactory.decodeByteArray(dressImage.getBytes(),0,dressImage.length()), "dress","clothes", 300.90);
+
+        Product accessoryProduct = new Product(2, BitmapFactory.decodeByteArray(accessoryImage.getBytes(),0,accessoryImage.length()), "accessories","Accessories", 250.0);
+
+        boolean added = db.addProduct(clothProduct1);
+        db.addProduct(clothProduct2);
+        db.addProduct(accessoryProduct);
+        Toast.makeText(MainActivity.this, "Added: " + added, Toast.LENGTH_SHORT).show();
+
     }
 
 

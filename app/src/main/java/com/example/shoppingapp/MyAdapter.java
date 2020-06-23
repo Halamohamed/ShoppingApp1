@@ -73,5 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             image = itemView.findViewById(R.id.recycelerview_image);
             row_layout = itemView.findViewById(R.id.recycelerview_layout);
         }
+
     }
+
 }

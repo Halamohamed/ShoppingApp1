@@ -5,7 +5,7 @@
     <string name="accessories_btn">ACCESSORIES</string>
     <string name="clothes_btn">CLOTHES</string>
     <string name="shoes_btn">SHOES</string>
-    <string name="electronic_btn">ELECTRONIC</string>
+    <string name="electronic_btn">API</string>
 
     <string name="tunic_title">TUNIC</string>
     <string name="tunic_img">TUNIC-IMAGE</string>

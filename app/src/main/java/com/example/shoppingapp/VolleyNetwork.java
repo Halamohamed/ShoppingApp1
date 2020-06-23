@@ -17,7 +17,7 @@ public class VolleyNetwork {
         this.context = context;
     }
 
-    public VolleyNetwork getInstance(Context context){
+    public static VolleyNetwork getInstance(Context context){
 
         if(instance == null){
             instance = new VolleyNetwork(context);
