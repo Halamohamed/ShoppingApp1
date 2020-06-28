@@ -1,10 +1,15 @@
 package com.example.shoppingapp;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -77,20 +82,53 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
 
             }
         });
-        //add registerForContextMenu(ListView); on onCreate Method
+        registerForContextMenu(list_users);
 
-        //AdapterView.AdapterContextMenuInfo info = item.getMenuInfo();
+
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.context_menu, menu);
+        return true;
+    }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.context_menu,menu);
     }
 
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        AlertDialog.Builder builderDialog = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.user_dialog,null);
+
+        builderDialog.setView(dialogView);
+
+        ImageView user_avatar;
+        TextView user_id;
+        TextView user_name;
+        TextView user_email;
+
+        user_avatar = dialogView.findViewById(R.id.dialog_imageview);
+        user_id = dialogView.findViewById(R.id.dialog_txt_id);
+        user_name = dialogView.findViewById(R.id.dialog_txt_fullname);
+        user_email = dialogView.findViewById(R.id.dialog_txt_email);
+
+        Picasso.get().load(userModals.get(info.position).getAvatar()).into(user_avatar);
+        user_id.setText(String.valueOf(userModals.get(info.position).getId()));
+        user_name.setText(userModals.get(info.position).getFirstName()+ " " + userModals.get(info.position).getLastName());
+        user_email.setText(userModals.get(info.position).getEmail());
+
+        AlertDialog updateUserDialog = builderDialog.create();
+        updateUserDialog.show();
+        updateUserDialog.getWindow().setLayout(800,900);
         return super.onContextItemSelected(item);
-        //Switch here
-        //code..
+
     }
 
     @Override
@@ -111,9 +149,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                                         userObject.getString("last_name"),
                                         userObject.getString("avatar"));
                                 userModals.add(user);
-                                String fullName = user.getFirstName()+ " " + user.getLastName()+ " | ";
+                                String fullName = user.getFirstName()+ " " + user.getLastName();
                                 fullNameList.add(fullName);
-                                //Picasso.get().load(userObject.getString("avatar")).into(image_avatar);
                                 updateViews();
                             }
 
@@ -126,7 +163,7 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ApiActivity.this,"Faild" + error.toString(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ApiActivity.this,"Failed" + error.toString(), Toast.LENGTH_SHORT).show();
                         error.printStackTrace();
                     }
                 });
@@ -165,8 +202,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(this, "PUT", Toast.LENGTH_SHORT).show();
                 JSONObject putData = new JSONObject();
                 try {
-                    putData.put("name","Khalifa");
-                    putData.put("course", "Android");
+                    putData.put("name","Hala Ali");
+                    putData.put("course", "Developer");
 
                     JsonObjectRequest myPutRequest = new JsonObjectRequest(Request.Method.PUT, SERVER_URL + "users/2", putData, new Response.Listener<JSONObject>() {
                         @Override
@@ -186,7 +223,6 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                 }
                 break;
             case R.id.delete_btn:
-                Toast.makeText(this, "DELETE", Toast.LENGTH_SHORT).show();
 
                 JsonObjectRequest myDeleteRequest = new JsonObjectRequest(Request.Method.DELETE,  "https://jsonplaceholder.typicode.com/posts/1", null, new Response.Listener<JSONObject>() {
                     @Override
@@ -199,8 +235,9 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                         error.printStackTrace();
                     }
                 });
+                //Toast.makeText(this, "DELETE" , Toast.LENGTH_SHORT).show();
                 requestQueue.add(myDeleteRequest);
-               // VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myDeleteRequest);
+                //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myDeleteRequest);
                 break;
 
         }

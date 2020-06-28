@@ -15,16 +15,12 @@ import java.util.ArrayList;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
-    ArrayList titlesData;
-    ArrayList priceData;
-    ArrayList imagesData;
+    ArrayList<Product> products_list;
 
     Context context;
 
-    public MyAdapter( Context context, ArrayList titlesData, ArrayList priceData, ArrayList imagesData) {
-        this.titlesData = titlesData;
-        this.priceData = priceData;
-        this.imagesData = imagesData;
+    public MyAdapter( Context context, ArrayList<Product>  products_list) {
+        this.products_list = products_list;
         this.context = context;
     }
 
@@ -38,25 +34,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyAdapter.MyViewHolder holder, final int position) {
-        holder.title.setText(titlesData.get(position).toString());
-        holder.price.setText(priceData.get(position).toString());
 
+        Product temp = products_list.get(position);
 
-        //holder.image.setImageResource(imagesData[position]);
-            /*holder.row_layout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, "Clicked on:"+ titlesData.get(position).toString(), Toast.LENGTH_SHORT).show();
-                    titlesData.remove(position);
-                    notifyDataSetChanged();
-                }
-            });*/
+        holder.title.setText(temp.getProductName());
+        holder.price.setText(String.valueOf(temp.getProductPrice()));
+        holder.image.setImageBitmap(temp.getProductImage());
 
     }
 
     @Override
     public int getItemCount() {
-        return titlesData.size();
+        return products_list.size();
     }
 
     public class MyViewHolder  extends RecyclerView.ViewHolder{
@@ -77,3 +66,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
 }
+//holder.image.setImageResource(imagesData[position]);
+            /*holder.row_layout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context, "Clicked on:"+ titlesData.get(position).toString(), Toast.LENGTH_SHORT).show();
+                    titlesData.remove(position);
+                    notifyDataSetChanged();
+                }
+            });*/

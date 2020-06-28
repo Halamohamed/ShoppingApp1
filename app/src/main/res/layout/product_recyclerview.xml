@@ -22,7 +22,7 @@
             android:id="@+id/recycelerview_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#978686">
+            android:background="#C1AEE4">
 
             <ImageView
                 android:id="@+id/recycelerview_image"

@@ -91,8 +91,12 @@
 
     <TextView
         android:id="@+id/myTextResult"
-        android:layout_width="408dp"
+        android:layout_width="wrap_content"
         android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:hint="Result"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +23,8 @@ import android.widget.Toast;
 import com.example.shoppingapp.ui.AccessoriesProduct;
 import com.example.shoppingapp.ui.ClothesProduct;
 import com.example.shoppingapp.ui.ShoesProduct;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,19 +33,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button clothesBtn;
     private Button shoesBtn;
     private Button apiBtn;
-    private ListView product_listView;
+    private Button addToDB_btn;
+    private ImageView imageMain;
+    private final String accessoryImage = "https://i.imgur.com/zYY9thC.jpg";
 
-    private  String accessoryImage = "https://imgur.com/zYY9thC";
+    DataBaseHelper dataBaseHelper;
 
     private  String dressImage = "https://imgur.com/CDOshUv";
-    private String jeansImage =  "https://imgur.com/I6SbsYs";
-    private String jumpsuitImage = "https://imgur.com/qIAHOi8";
-    private String kidsDressImage = "https://imgur.com/Cxz5XeE";
-
-    private Button get_btn, post_btn, put_btn, delete_btn;
-   // private RequestQueue requestQueue;
-
-    private static final String SERVER_URL= "https://reqres.in/api";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,32 +52,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         clothesBtn = findViewById(R.id.clothes_btn);
         shoesBtn = findViewById(R.id.shoes_btn);
         apiBtn = findViewById(R.id.api_btn);
-        //product_listView = findViewById(R.id.myProduct_listView);
-
+        addToDB_btn = findViewById(R.id.addToDB_btn);
+        imageMain = findViewById(R.id.image_main);
 
         //set onClickListener for buttons
         accessoriesBtn.setOnClickListener(this);
         clothesBtn.setOnClickListener(this);
         shoesBtn.setOnClickListener(this);
         apiBtn.setOnClickListener(this);
+        addToDB_btn.setOnClickListener(this);
 
-        //requestQueue = Volley.newRequestQueue(this);
-
-        //registerForContextMenu(product_listView);
-
-
+        dataBaseHelper = new DataBaseHelper(this);
 
     }
 
     @Override
     public void onClick(View v) {
-
         Intent intent;
-
-       // addProduct();
         switch (v.getId()){
             case R.id.clothes_btn:
-
                  intent = new Intent(MainActivity.this, ClothesProduct.class);
                  Toast.makeText(MainActivity.this, "Clothes product", Toast.LENGTH_SHORT).show();
                 startActivity(intent);
@@ -96,13 +87,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.api_btn:
                 Toast.makeText(MainActivity.this,"API call", Toast.LENGTH_SHORT).show();
-                Intent apiIntent = new Intent(this, ApiActivity.class);
-                startActivity(apiIntent);
+                 intent = new Intent(this, ApiActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.addToDB_btn:
+                Toast.makeText(MainActivity.this,"added product To DB", Toast.LENGTH_SHORT).show();
+                //dataBaseHelper.addAccessoriesProductToDB();
+                //dataBaseHelper.addClothesProductToDB();
+                //dataBaseHelper.addShoesProductToDB();
                 break;
         }
     }
-
-    //VolleyNetwork.getInstance()
 
 
     @Override
@@ -122,22 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         AdapterView.AdapterContextMenuInfo itemInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        return super.onContextItemSelected(item);
-    }
-
-    public void addProduct(){
-        DataBaseHelper db = new DataBaseHelper(MainActivity.this);
-        Product clothProduct1 = new Product(0, BitmapFactory.decodeByteArray(jeansImage.getBytes(),0,jeansImage.length()), "dress","clothes", 300.90);
-        Product clothProduct2 = new Product(1, BitmapFactory.decodeByteArray(dressImage.getBytes(),0,dressImage.length()), "dress","clothes", 300.90);
-
-        Product accessoryProduct = new Product(2, BitmapFactory.decodeByteArray(accessoryImage.getBytes(),0,accessoryImage.length()), "accessories","Accessories", 250.0);
-
-        boolean added = db.addProduct(clothProduct1);
-        db.addProduct(clothProduct2);
-        db.addProduct(accessoryProduct);
-        Toast.makeText(MainActivity.this, "Added: " + added, Toast.LENGTH_SHORT).show();
-
+        return super.onContextItemSelected((MenuItem) itemInfo);
     }
 
 
