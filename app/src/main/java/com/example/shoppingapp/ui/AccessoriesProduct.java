@@ -1,48 +1,39 @@
 package com.example.shoppingapp.ui;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shoppingapp.DataBaseHelper;
-import com.example.shoppingapp.MainActivity;
 import com.example.shoppingapp.MyAdapter;
 import com.example.shoppingapp.Product;
 import com.example.shoppingapp.R;
-import com.google.android.material.snackbar.Snackbar;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class AccessoriesProduct extends AppCompatActivity {
-
-    private ListView myListView;
-    private ImageView myImage;
-    private EditText titleText;
-    private EditText myPrice;
     private RecyclerView accessories_list;
     private MyAdapter adp;
     private DataBaseHelper dataBaseHelper;
+    private ArrayAdapter arrayAdapter;
+    private ListView listViewAccessories;
     private final String fashionAccessory = "https://i.imgur.com/z5guBd4.jpg";
     private final String accessoryImage = "https://i.imgur.com/zYY9thC.jpg";
 
@@ -59,13 +50,97 @@ public class AccessoriesProduct extends AppCompatActivity {
         product_list = dataBaseHelper.getAccessories();
         //Toast.makeText(this, "product: " + product_list.get(0).toString(), Toast.LENGTH_SHORT).show();
 
+
+
+        registerForContextMenu(accessories_list);
+        //accessories_list.setRecyclerListener(onContextItemSelected(R.menu.update_item));
+
+
+        arrayAdapter = new ArrayAdapter(AccessoriesProduct.this, android.R.layout.simple_list_item_1,product_list);
+        updateViews();
+
+
+    }
+
+    private void updateViews() {
         adp = new MyAdapter(this,product_list);
 
         accessories_list.setAdapter(adp);
         accessories_list.setLayoutManager(new LinearLayoutManager(this));
+    }
+    private void showMyListAccessory(){
+        arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,dataBaseHelper.getAccessories());
+        listViewAccessories.setAdapter(arrayAdapter);
+    }
 
-        registerForContextMenu(accessories_list);
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.update_item, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.update_item, menu);
+    }
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch (item.getItemId()){
+            case R.id.menu_delete_item:
+                boolean status = dataBaseHelper.deleteOneAccessoryProduct((Product) arrayAdapter.getItem(info.position));
+                Toast.makeText(AccessoriesProduct.this, " deleted " + status, Toast.LENGTH_SHORT).show();
+                updateViews();
+                break;
+            case R.id.menu_update_item:
+                AlertDialog.Builder builderDialog = new AlertDialog.Builder(this);
+                LayoutInflater inflater = getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.edit_dialog,null);
+
+                builderDialog.setView(dialogView);
+                //declare views
+                final TextView edit_name, edit_price;
+                final Button save_btn;
+
+                edit_name = dialogView.findViewById(R.id.edit_name);
+                edit_price = dialogView.findViewById(R.id.edit_price);
+                save_btn = dialogView.findViewById(R.id.save_btn);
+
+                final Product tempProduct = (Product) arrayAdapter.getItem(info.position);
+
+                edit_name.setText(tempProduct.getProductName());
+                edit_price.setText(String.valueOf(tempProduct.getProductPrice()));
+
+
+                AlertDialog updateProductDialog = builderDialog.create();
+                updateProductDialog.show();
+
+                save_btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        tempProduct.setProductName(edit_name.getText().toString());
+                        Double price = Double.parseDouble(edit_price.getText().toString());
+                        tempProduct.setProductPrice(price);
+                        dataBaseHelper.updateAccessoryProduct(tempProduct);
+                        Toast.makeText(AccessoriesProduct.this,"Updated ", Toast.LENGTH_SHORT).show();
+                        updateViews();
+                        showMyListAccessory();
+                    }
+                });
+                updateProductDialog.onContextItemSelected(item);
+                updateProductDialog.getWindow().setLayout(800,900);
+
+                break;
+
+        }
+        return super.onContextItemSelected(item);
 
     }
+
+
+
 
 }

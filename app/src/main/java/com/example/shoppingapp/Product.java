@@ -24,6 +24,22 @@ public class Product {
         return id;
     }
 
+    public void setProductImage(Bitmap productImage) {
+        this.productImage = productImage;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setProductPrice(Double productPrice) {
+        this.productPrice = productPrice;
+    }
+
     public String getProductName() {
         return productName;
     }

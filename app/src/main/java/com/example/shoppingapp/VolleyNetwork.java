@@ -13,12 +13,12 @@ public class VolleyNetwork {
     private Context context;
 
     public VolleyNetwork(Context context) {
-        this.requestQueue = getRequestQueue();
         this.context = context;
+        this.requestQueue = getRequestQueue();
+
     }
 
     public static VolleyNetwork getInstance(Context context){
-
         if(instance == null){
             instance = new VolleyNetwork(context);
         }

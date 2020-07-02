@@ -92,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.addToDB_btn:
                 Toast.makeText(MainActivity.this,"added product To DB", Toast.LENGTH_SHORT).show();
-                //dataBaseHelper.addAccessoriesProductToDB();
-                //dataBaseHelper.addClothesProductToDB();
-                //dataBaseHelper.addShoesProductToDB();
+                dataBaseHelper.addAccessoriesProductToDB();
+                dataBaseHelper.addClothesProductToDB();
+                dataBaseHelper.addShoesProductToDB();
                 break;
         }
     }

@@ -84,7 +84,6 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
         });
         registerForContextMenu(list_users);
 
-
     }
 
     @Override
@@ -167,8 +166,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                         error.printStackTrace();
                     }
                 });
-                requestQueue.add(myGetRequest);
-                //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myGetRequest);
+                //requestQueue.add(myGetRequest);
+                VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myGetRequest);
                 break;
             case R.id.post_btn:
                 Toast.makeText(this,"POST" , Toast.LENGTH_SHORT).show();
@@ -191,8 +190,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                             error.printStackTrace();
                         }
                     });
-                    requestQueue.add(myPostRequest);
-                    //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPostRequest);
+                    //requestQueue.add(myPostRequest);
+                    VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPostRequest);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -216,8 +215,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                             error.printStackTrace();
                         }
                     });
-                    requestQueue.add(myPutRequest);
-                    //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPutRequest);
+                    //requestQueue.add(myPutRequest);
+                    VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myPutRequest);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -236,8 +235,8 @@ public class ApiActivity extends AppCompatActivity implements View.OnClickListen
                     }
                 });
                 //Toast.makeText(this, "DELETE" , Toast.LENGTH_SHORT).show();
-                requestQueue.add(myDeleteRequest);
-                //VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myDeleteRequest);
+                //requestQueue.add(myDeleteRequest);
+                VolleyNetwork.getInstance(this.getApplicationContext()).addToRequestQueue(myDeleteRequest);
                 break;
 
         }

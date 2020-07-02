@@ -66,7 +66,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String createShoesTableQuery = "CREATE TABLE " + SHOES_TABLE + "( " + ID + "  INTEGER PRIMARY KEY AUTOINCREMENT," + " " + IMAGES + " BLOB ," +
                 COLUMN_PRODUCT_NAME + " TEXT , " + COLUMN_CATEGORY + " TEXT , " + COLUMN_PRICE + " DECIMAL)";
         db.execSQL(createShoesTableQuery);
-
         //add products to database
         addAccessoriesProductToDB();
         addClothesProductToDB();
@@ -386,6 +385,19 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+    public boolean deleteOneAccessoryProduct(Product product){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String deleteProductQuery = "DELETE FROM " + ACCESSORY_TABLE + " WHERE " + ID + " = "+ product.getId();
+
+        Cursor cursor = db.rawQuery(deleteProductQuery,null);
+        if(cursor.moveToFirst()){
+
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     public boolean deleteShoesProduct(){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -466,6 +478,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return products;
     }
 
+    public void updateAccessoryProduct(Product tempProduct) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(COLUMN_PRODUCT_NAME, tempProduct.getProductName());
+        contentValues.put(COLUMN_PRICE, tempProduct.getProductPrice());
+
+        db.update(ACCESSORY_TABLE,contentValues,ID + " = " + tempProduct.getId(), null);
+    }
 }
  /*   private void addImageToClothes(String image, final int i) {
         Picasso.get().load(image).into(new Target() {
