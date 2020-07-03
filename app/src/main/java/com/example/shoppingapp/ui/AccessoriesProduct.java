@@ -87,18 +87,20 @@ public class AccessoriesProduct extends AppCompatActivity {
     }
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         switch (item.getItemId()){
             case R.id.menu_delete_item:
-                boolean status = dataBaseHelper.deleteOneAccessoryProduct((Product) arrayAdapter.getItem(info.position));
-                Toast.makeText(AccessoriesProduct.this, " deleted " + status, Toast.LENGTH_SHORT).show();
+               // boolean status = dataBaseHelper.deleteOneAccessoryProduct((Product) arrayAdapter.getItem(info.position));
+                Toast.makeText(AccessoriesProduct.this, " deleted " , Toast.LENGTH_SHORT).show();
                 updateViews();
                 break;
             case R.id.menu_update_item:
                 AlertDialog.Builder builderDialog = new AlertDialog.Builder(this);
                 LayoutInflater inflater = getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.edit_dialog,null);
+                Toast.makeText(AccessoriesProduct.this,"Updated ", Toast.LENGTH_SHORT).show();
+
 
                 builderDialog.setView(dialogView);
                 //declare views
@@ -109,19 +111,18 @@ public class AccessoriesProduct extends AppCompatActivity {
                 edit_price = dialogView.findViewById(R.id.edit_price);
                 save_btn = dialogView.findViewById(R.id.save_btn);
 
-                final Product tempProduct = (Product) arrayAdapter.getItem(info.position);
+                  /*final Product tempProduct = (Product) arrayAdapter.getItem(info.position);
 
                 edit_name.setText(tempProduct.getProductName());
                 edit_price.setText(String.valueOf(tempProduct.getProductPrice()));
 
 
-                AlertDialog updateProductDialog = builderDialog.create();
-                updateProductDialog.show();
+
 
                 save_btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        tempProduct.setProductName(edit_name.getText().toString());
+                       tempProduct.setProductName(edit_name.getText().toString());
                         Double price = Double.parseDouble(edit_price.getText().toString());
                         tempProduct.setProductPrice(price);
                         dataBaseHelper.updateAccessoryProduct(tempProduct);
@@ -130,6 +131,9 @@ public class AccessoriesProduct extends AppCompatActivity {
                         showMyListAccessory();
                     }
                 });
+               */
+                AlertDialog updateProductDialog = builderDialog.create();
+                updateProductDialog.show();
                 updateProductDialog.onContextItemSelected(item);
                 updateProductDialog.getWindow().setLayout(800,900);
 
